@@ -6,6 +6,7 @@ class RobotConan(ConanFile):
     name = "Robot"
     version = "2.0"
     license = "MIT"
+    url = "https://github.com/memsharded/conan-robot"
     settings = "os", "compiler", "build_type", "arch"
     options = {"shared": [True, False]}
     default_options = "shared=False"
@@ -20,7 +21,8 @@ conan_basic_setup()
 
     def build(self):
         cmake = CMake(self.settings)
-        self.run('cmake robot %s' % cmake.command_line)
+        shared = "-DBuildStatic=OFF" if self.options.shared else "-DBuildStatic=ON"
+        self.run('cmake robot %s %s' % (cmake.command_line, shared))
         self.run("cmake --build . %s" % cmake.build_config)
 
     def package(self):
